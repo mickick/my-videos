@@ -5,20 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Videoplayer mit Sehanstatus</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        
         .erklärung {
             position: relative;
             background-color: #e8f4f8;
@@ -27,12 +16,8 @@
             margin-bottom: 30px;
             border-radius: 4px;
         }
-
-        .erklärung h2 {
-            margin-bottom: 10px;
-            color: #0288d1;
-        }
-
+        .erklärung h2 { margin-bottom: 10px; color: #0288d1; }
+        
         .close-btn {
             position: absolute;
             top: 10px;
@@ -50,170 +35,32 @@
             justify-content: center;
             transition: transform 0.2s;
         }
+        .close-btn:hover { transform: scale(1.3); }
+        .erklärung.hidden { display: none; }
 
-        .close-btn:hover {
-            transform: scale(1.3);
-        }
-
-        .erklärung.hidden {
-            display: none;
-        }
-
-        .status-legend {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-
-        .neu { background-color: #81d4fa; }
-        .nicht-angefangen { background-color: #ef5350; }
-        .angefangen { background-color: #ffee58; }
-        .fertig { background-color: #66bb6a; }
-
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .video-liste {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .video-liste h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .video-item {
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .video-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .video-item.neu {
-            background-color: #81d4fa;
-            border-left-color: #0277bd;
-            color: #01579b;
-        }
-
-        .video-item.nicht-angefangen {
-            background-color: #ef5350;
-            border-left-color: #c62828;
-            color: white;
-        }
-
-        .video-item.angefangen {
-            background-color: #ffee58;
-            border-left-color: #f57f17;
-            color: #333;
-        }
-
-        .video-item.fertig {
-            background-color: #66bb6a;
-            border-left-color: #2e7d32;
-            color: white;
-        }
-
-        .video-item.active {
-            font-weight: bold;
-            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
-        }
-
-        .player-section {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .player-section h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        video {
-            width: 100%;
-            border-radius: 4px;
-            background-color: #000;
-        }
-
-        .video-info {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: #f5f5f5;
-            border-radius: 4px;
-        }
-
-        .video-info p {
-            margin: 8px 0;
-            font-size: 14px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: #ddd;
-            border-radius: 4px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: #0288d1;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .no-videos {
-            padding: 20px;
-            text-align: center;
-            color: #999;
-            background-color: #f9f9f9;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-
-            .video-liste {
-                max-height: 300px;
-            }
-        }
+        .status-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .legend-item { display: flex; align-items: center; gap: 10px; }
+        .legend-color { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; }
+        .neu { background-color: #81d4fa; }.nicht-angefangen { background-color: #ef5350; }.angefangen { background-color: #ffee58; }.fertig { background-color: #66bb6a; }
+        .container { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-top: 20px; }
+        .video-liste { background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-height: 600px; overflow-y: auto; }
+        .video-liste h3 { margin-bottom: 15px; color: #333; }
+        .video-item { padding: 12px; margin-bottom: 8px; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid transparent; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .video-item:hover { transform: translateX(5px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .video-item.neu { background-color: #81d4fa; border-left-color: #0277bd; color: #01579b; }
+        .video-item.nicht-angefangen { background-color: #ef5350; border-left-color: #c62828; color: white; }
+        .video-item.angefangen { background-color: #ffee58; border-left-color: #f57f17; color: #333; }
+        .video-item.fertig { background-color: #66bb6a; border-left-color: #2e7d32; color: white; }
+        .video-item.active { font-weight: bold; box-shadow: 0 0 0 3px rgba(0,0,0,0.1); }
+        .player-section { background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .player-section h3 { margin-bottom: 15px; color: #333; }
+        video { width: 100%; border-radius: 4px; background-color: #000; }
+        .video-info { margin-top: 15px; padding: 15px; background-color: #f5f5f5; border-radius: 4px; }
+        .video-info p { margin: 8px 0; font-size: 14px; }
+        .progress-bar { width: 100%; height: 8px; background-color: #ddd; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background-color: #0288d1; width: 0%; transition: width 0.3s ease; }
+        .no-videos { padding: 20px; text-align: center; color: #999; background-color: #f9f9f9; border-radius: 4px; }
+        @media (max-width: 768px) {.container { grid-template-columns: 1fr; }.video-liste { max-height: 300px; } }
     </style>
 </head>
 <body>
@@ -222,43 +69,23 @@
         <h2>📺 Videoplayer - Sehanstatus Tracker</h2>
         <p>Dieser Videoplayer verfolgt automatisch, welche Videos du gesehen hast und färbt sie entsprechend:</p>
         <div class="status-legend">
-            <div class="legend-item">
-                <div class="legend-color neu"></div>
-                <span><strong>Hellblau:</strong> Neu - noch nicht auf der Seite</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color nicht-angefangen"></div>
-                <span><strong>Rot:</strong> Nicht angefangen - nie gestartet</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color angefangen"></div>
-                <span><strong>Gelb:</strong> Angefangen - teilweise gesehen</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color fertig"></div>
-                <span><strong>Grün:</strong> Fertig - komplett angesehen</span>
-            </div>
+            <div class="legend-item"><div class="legend-color neu"></div><span><strong>Hellblau:</strong> Neu</span></div>
+            <div class="legend-item"><div class="legend-color nicht-angefangen"></div><span><strong>Rot:</strong> Nicht angefangen</span></div>
+            <div class="legend-item"><div class="legend-color angefangen"></div><span><strong>Gelb:</strong> Angefangen</span></div>
+            <div class="legend-item"><div class="legend-color fertig"></div><span><strong>Grün:</strong> Fertig</span></div>
         </div>
-        <p style="margin-top: 15px; font-size: 14px; color: #666;">
-            💾 Dein Sehanstatus wird automatisch lokal gespeichert und bleibt auch nach dem Neuladen erhalten.
-        </p>
+        <p style="margin-top: 15px; font-size: 14px; color: #666;">💾 Dein Sehanstatus wird automatisch lokal gespeichert.</p>
     </div>
 
     <div class="container">
-        <div class="video-liste" id="videoListe">
-            <h3>Videos</h3>
-            <div class="no-videos">Lade Videos...</div>
-        </div>
-
+        <div class="video-liste" id="videoListe"><h3>Videos</h3><div class="no-videos">Lade Videos...</div></div>
         <div class="player-section">
             <h3>Player</h3>
             <video id="videoPlayer" controls></video>
             <div class="video-info">
                 <p><strong>Video:</strong> <span id="videoName">Kein Video ausgewählt</span></p>
                 <p><strong>Fortschritt:</strong> <span id="videoProgress">0:00</span> / <span id="videoDuration">0:00</span></p>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
                 <p style="margin-top: 15px;"><strong>Status:</strong> <span id="videoStatus">-</span></p>
             </div>
         </div>
@@ -273,7 +100,6 @@
                 this.videoListe = document.getElementById('videoListe');
                 this.storageKey = 'videoPlayerStatus';
                 this.statusMap = new Map();
-                
                 this.init();
             }
 
@@ -289,12 +115,10 @@
             setupErklärungClose() {
                 const closeBtn = document.getElementById('closeErklärung');
                 const erklärung = document.getElementById('erklärung');
-                
                 closeBtn.addEventListener('click', () => {
                     erklärung.classList.add('hidden');
                     localStorage.setItem('erklärungHidden', 'true');
                 });
-
                 if (localStorage.getItem('erklärungHidden') === 'true') {
                     erklärung.classList.add('hidden');
                 }
@@ -309,12 +133,10 @@
             checkForNewVideos() {
                 const previousCount = parseInt(localStorage.getItem('videoCount') || '0');
                 const currentCount = this.videos.length;
-
                 if (currentCount > previousCount && previousCount > 0) {
                     const newCount = currentCount - previousCount;
                     this.showNotification(`${newCount} neue Video(s) hinzugefügt!`);
                 }
-
                 localStorage.setItem('videoCount', currentCount);
             }
 
@@ -322,26 +144,27 @@
                 if ('Notification' in window && Notification.permission === 'granted') {
                     new Notification('Videoplayer', {
                         body: message,
-                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%230288d1"/><polygon points="35,25 35,75 75,50" fill="white"/></svg>'
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📺</text></svg>'
                     });
                 }
             }
 
-                        async loadVideos() {
+            async loadVideos() {
                 try {
-                    // Hier definierst du deine Videos manuell
+                    // HIER MANUELL VIDEOS EINTRAGEN
                     this.videos = [
                         { url: 'Videos/sample-5mb.mp4', name: 'Sample Video' },
+                        // { url: 'Videos/meinVideo2.mp4', name: 'Zweites Video' },
+                        // { url: 'Videos/meinVideo3.mp4', name: 'Drittes Video' },
                     ];
+
+                    this.checkForNewVideos();
 
                     if (this.videos.length === 0) {
                         this.videoListe.innerHTML = '<div class="no-videos">Keine Videos definiert.</div>';
                     }
                 } catch (error) {
                     this.videoListe.innerHTML = `<div class="no-videos">⚠️ Fehler: ${error.message}</div>`;
-                }
-            }
- der Videos:', error);
                 }
             }
 
@@ -351,7 +174,6 @@
                     const data = JSON.parse(stored);
                     this.statusMap = new Map(data);
                 }
-
                 this.videos.forEach(video => {
                     if (!this.statusMap.has(video.name)) {
                         this.statusMap.set(video.name, { status: 'neu', watched: 0 });
@@ -371,20 +193,16 @@
             }
 
             getStatusClass(videoName) {
-                const status = this.getVideoStatus(videoName);
-                return status.status;
+                return this.getVideoStatus(videoName).status;
             }
 
             renderVideoList() {
                 if (this.videos.length === 0) return;
-
                 const listHTML = this.videos.map((video, index) => {
                     const statusClass = this.getStatusClass(video.name);
                     return `<div class="video-item ${statusClass}" data-index="${index}">${video.name}</div>`;
                 }).join('');
-
                 this.videoListe.innerHTML = '<h3>Videos</h3>' + listHTML;
-
                 this.videoListe.querySelectorAll('.video-item').forEach(item => {
                     item.addEventListener('click', (e) => {
                         this.selectVideo(parseInt(e.target.dataset.index));
@@ -396,22 +214,16 @@
                 this.currentVideoIndex = index;
                 const video = this.videos[index];
                 const status = this.getVideoStatus(video.name);
-
                 this.videoPlayer.src = video.url;
                 document.getElementById('videoName').textContent = video.name;
-                
                 if (status.status === 'neu') {
                     this.statusMap.set(video.name, { status: 'nicht-angefangen', watched: 0 });
                     this.saveStatusToStorage();
                 }
-
                 this.videoListe.querySelectorAll('.video-item').forEach((item, idx) => {
                     item.classList.remove('active');
-                    if (idx === index) {
-                        item.classList.add('active');
-                    }
+                    if (idx === index) { item.classList.add('active'); }
                 });
-
                 this.videoPlayer.currentTime = status.watched || 0;
                 this.updateVideoInfo();
                 this.renderVideoList();
@@ -425,21 +237,14 @@
 
             updateProgress() {
                 if (this.currentVideoIndex === null) return;
-
                 const video = this.videos[this.currentVideoIndex];
                 const currentTime = this.videoPlayer.currentTime;
                 const duration = this.videoPlayer.duration;
-
-                this.statusMap.set(video.name, {
-                    status: this.getCurrentStatus(),
-                    watched: currentTime
-                });
+                this.statusMap.set(video.name, { status: this.getCurrentStatus(), watched: currentTime });
                 this.saveStatusToStorage();
-
                 document.getElementById('videoProgress').textContent = this.formatTime(currentTime);
                 document.getElementById('progressFill').style.width = (currentTime / duration) * 100 + '%';
                 document.getElementById('videoStatus').textContent = this.getStatusText();
-                
                 this.updateVideoItemStatus(video.name);
             }
 
@@ -451,10 +256,8 @@
 
             getCurrentStatus() {
                 if (this.currentVideoIndex === null) return 'neu';
-
                 const currentTime = this.videoPlayer.currentTime;
                 const duration = this.videoPlayer.duration;
-
                 if (currentTime === 0) return 'nicht-angefangen';
                 if (currentTime >= duration * 0.95) return 'fertig';
                 return 'angefangen';
@@ -462,42 +265,30 @@
 
             getStatusText() {
                 const status = this.getCurrentStatus();
-                const statusTexts = {
-                    'neu': 'Neu',
-                    'nicht-angefangen': 'Nicht angefangen',
-                    'angefangen': 'Teilweise angesehen',
-                    'fertig': '✓ Fertig'
-                };
+                const statusTexts = { 'neu': 'Neu', 'nicht-angefangen': 'Nicht angefangen', 'angefangen': 'Teilweise angesehen', 'fertig': '✓ Fertig' };
                 return statusTexts[status] || '-';
             }
 
             markVideoAsFinished() {
                 if (this.currentVideoIndex === null) return;
                 const video = this.videos[this.currentVideoIndex];
-                this.statusMap.set(video.name, {
-                    status: 'fertig',
-                    watched: this.videoPlayer.duration
-                });
+                this.statusMap.set(video.name, { status: 'fertig', watched: this.videoPlayer.duration });
                 this.saveStatusToStorage();
                 this.renderVideoList();
                 this.updateVideoInfo();
             }
 
-            updateVideoItemStatus(videoName) {
-                const item = this.videoListe.querySelector(`[data-index]`);
-                if (item) {
-                    setTimeout(() => this.renderVideoList(), 100);
-                }
+            updateVideoItemStatus() {
+                setTimeout(() => this.renderVideoList(), 100);
             }
 
             formatTime(seconds) {
-                if (!seconds || isNaN(seconds)) return '0:00'
+                if (!seconds || isNaN(seconds)) return '0:00';
                 const mins = Math.floor(seconds / 60);
                 const secs = Math.floor(seconds % 60);
                 return `${mins}:${secs.toString().padStart(2, '0')}`;
             }
         }
-
         const player = new VideoPlayer();
     </script>
 </body>
