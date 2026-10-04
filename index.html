@@ -20,6 +20,7 @@
         }
 
         .erklärung {
+            position: relative;
             background-color: #e8f4f8;
             border-left: 5px solid #0288d1;
             padding: 20px;
@@ -32,7 +33,32 @@
             color: #0288d1;
         }
 
-        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #0288d1;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.3);
+        }
+
+        .erklärung.hidden {
+            display: none;
+        }
+
         .status-legend {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -191,7 +217,8 @@
     </style>
 </head>
 <body>
-    <div class="erklärung">
+    <div class="erklärung" id="erklärung">
+        <button class="close-btn" id="closeErklärung">×</button>
         <h2>📺 Videoplayer - Sehanstatus Tracker</h2>
         <p>Dieser Videoplayer verfolgt automatisch, welche Videos du gesehen hast und färbt sie entsprechend:</p>
         <div class="status-legend">
@@ -255,6 +282,49 @@
                 this.loadStatusFromStorage();
                 this.renderVideoList();
                 this.setupEventListeners();
+                this.setupNotifications();
+                this.setupErklärungClose();
+            }
+
+            setupErklärungClose() {
+                const closeBtn = document.getElementById('closeErklärung');
+                const erklärung = document.getElementById('erklärung');
+                
+                closeBtn.addEventListener('click', () => {
+                    erklärung.classList.add('hidden');
+                    localStorage.setItem('erklärungHidden', 'true');
+                });
+
+                if (localStorage.getItem('erklärungHidden') === 'true') {
+                    erklärung.classList.add('hidden');
+                }
+            }
+
+            setupNotifications() {
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+            }
+
+            checkForNewVideos() {
+                const previousCount = parseInt(localStorage.getItem('videoCount') || '0');
+                const currentCount = this.videos.length;
+
+                if (currentCount > previousCount && previousCount > 0) {
+                    const newCount = currentCount - previousCount;
+                    this.showNotification(`${newCount} neue Video(s) hinzugefügt!`);
+                }
+
+                localStorage.setItem('videoCount', currentCount);
+            }
+
+            showNotification(message) {
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Videoplayer', {
+                        body: message,
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%230288d1"/><polygon points="35,25 35,75 75,50" fill="white"/></svg>'
+                    });
+                }
             }
 
             async loadVideos() {
@@ -271,6 +341,8 @@
                             url: href,
                             name: href.split('/').pop().replace(/\.(mp4|webm|ogg)$/i, '')
                         }));
+
+                    this.checkForNewVideos();
 
                     if (this.videos.length === 0) {
                         this.videoListe.innerHTML = '<div class="no-videos">Keine Videos im Ordner "Videos" gefunden.</div>';
@@ -293,7 +365,6 @@
                     this.statusMap = new Map(data);
                 }
 
-                // Markiere alle neuen Videos
                 this.videos.forEach(video => {
                     if (!this.statusMap.has(video.name)) {
                         this.statusMap.set(video.name, { status: 'neu', watched: 0 });
@@ -342,13 +413,11 @@
                 this.videoPlayer.src = video.url;
                 document.getElementById('videoName').textContent = video.name;
                 
-                // Markiere als nicht-angefangen, wenn neu
                 if (status.status === 'neu') {
                     this.statusMap.set(video.name, { status: 'nicht-angefangen', watched: 0 });
                     this.saveStatusToStorage();
                 }
 
-                // Update UI
                 this.videoListe.querySelectorAll('.video-item').forEach((item, idx) => {
                     item.classList.remove('active');
                     if (idx === index) {
@@ -356,7 +425,6 @@
                     }
                 });
 
-                // Setze Video auf letzten Sehanstatus
                 this.videoPlayer.currentTime = status.watched || 0;
                 this.updateVideoInfo();
                 this.renderVideoList();
@@ -375,19 +443,16 @@
                 const currentTime = this.videoPlayer.currentTime;
                 const duration = this.videoPlayer.duration;
 
-                // Speichere den aktuellen Fortschritt
                 this.statusMap.set(video.name, {
                     status: this.getCurrentStatus(),
                     watched: currentTime
                 });
                 this.saveStatusToStorage();
 
-                // Update UI
                 document.getElementById('videoProgress').textContent = this.formatTime(currentTime);
                 document.getElementById('progressFill').style.width = (currentTime / duration) * 100 + '%';
                 document.getElementById('videoStatus').textContent = this.getStatusText();
                 
-                // Update Liste
                 this.updateVideoItemStatus(video.name);
             }
 
@@ -434,21 +499,18 @@
             updateVideoItemStatus(videoName) {
                 const item = this.videoListe.querySelector(`[data-index]`);
                 if (item) {
-                    // Re-render die gesamte Liste für aktuelle Status
                     setTimeout(() => this.renderVideoList(), 100);
                 }
             }
 
             formatTime(seconds) {
-                if (!seconds || isNaN(seconds)) return '0:00';
-                const mins = Math
+                if (!seconds || isNaN(seconds)) return '0:00'
                 const mins = Math.floor(seconds / 60);
                 const secs = Math.floor(seconds % 60);
                 return `${mins}:${secs.toString().padStart(2, '0')}`;
             }
         }
 
-        // Starte die App
         const player = new VideoPlayer();
     </script>
 </body>
