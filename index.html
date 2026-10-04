@@ -327,34 +327,21 @@
                 }
             }
 
-            async loadVideos() {
+                        async loadVideos() {
                 try {
-                    const response = await fetch('Videos/');
-                    const html = await response.text();
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    
-                    this.videos = Array.from(doc.querySelectorAll('a'))
-                        .map(a => a.href)
-                        .filter(href => /\.(mp4|webm|ogg)$/i.test(href))
-                        .map(href => ({
-                            url: href,
-                            name: href.split('/').pop().replace(/\.(mp4|webm|ogg)$/i, '')
-                        }));
-
-                    this.checkForNewVideos();
+                    // Hier definierst du deine Videos manuell
+                    this.videos = [
+                        { url: 'Videos/sample-5mb.mp4', name: 'Sample Video' },
+                    ];
 
                     if (this.videos.length === 0) {
-                        this.videoListe.innerHTML = '<div class="no-videos">Keine Videos im Ordner "Videos" gefunden.</div>';
+                        this.videoListe.innerHTML = '<div class="no-videos">Keine Videos definiert.</div>';
                     }
                 } catch (error) {
-                    this.videoListe.innerHTML = `
-                        <div class="no-videos">
-                            ⚠️ Fehler beim Laden der Videos<br>
-                            <small>${error.message}</small>
-                        </div>
-                    `;
-                    console.error('Fehler beim Laden der Videos:', error);
+                    this.videoListe.innerHTML = `<div class="no-videos">⚠️ Fehler: ${error.message}</div>`;
+                }
+            }
+ der Videos:', error);
                 }
             }
 
